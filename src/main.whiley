@@ -10,6 +10,8 @@ import h1 from w3c::html
 import div from w3c::html
 import style from w3c::html
 import button from w3c::html
+import MouseEvent from w3c::html
+import Event from w3c::html
 
 // =========================================
 // Model
@@ -93,14 +95,14 @@ function button(ascii::string label, Transformer fn) -> Node<State>:
     // construct button
     return html::button<State>([
         style<State>(BUTTON_STYLE),
-        onClick(fn)
+        onClick(&(MouseEvent e, State s -> fn(s)))
     ],[label])
 
 function numeric(int value) -> Node<State>:
     // construct label
     ascii::string label = ascii::to_string(value)
     // construct button
-    return button(label,&(State s -> enter(value,s)))
+    return button(label,&(MouseEvent e, State s -> enter(value,s)))
 
 function view(State s) -> Node<State>:
     int current
@@ -112,15 +114,15 @@ function view(State s) -> Node<State>:
     // Construct display
     return div<State>([
         // Display
-        h1<State>(ascii::to_string(current)),
+        h1<State>(ascii::to_string(current))
         // Top row
-        div<State>([numeric(7),numeric(8),numeric(9),button("/",DIVIDER)]),
-        // Middle row
-        div<State>([numeric(4),numeric(5),numeric(6),button("*",MULTIPLIER)]),
-        // Bottom row
-        div<State>([numeric(1),numeric(2),numeric(3),button("+",ADDER)]),
-        // Operator Row
-        div<State>([button("C",&clear),numeric(0),button("=",&execute),button("-",SUBTRACTER)])
+        // div<State>([numeric(7),numeric(8),numeric(9),button("/",DIVIDER)]),
+        // // Middle row
+        // div<State>([numeric(4),numeric(5),numeric(6),button("*",MULTIPLIER)]),
+        // // Bottom row
+        // div<State>([numeric(1),numeric(2),numeric(3),button("+",ADDER)]),
+        // // Operator Row
+        // div<State>([button("C",&clear),numeric(0),button("=",EXEC),button("-",SUBTRACTER)])
     ])
 
 // =========================================
