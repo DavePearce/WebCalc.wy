@@ -5,11 +5,9 @@ import w3c::dom
 import w3c::html
 import App from w3c::app
 import Node from w3c::html
-import onClick from w3c::html
-import h1 from w3c::html
-import div from w3c::html
 import style from w3c::html
-import button from w3c::html
+import onClick from w3c::html
+import element from w3c::html
 import MouseEvent from w3c::html
 import Event from w3c::html
 
@@ -42,13 +40,13 @@ function execute(State s) -> (State r):
     //
     if c is int:
         switch(s.mode):
-            case 0:
+            case ADD:
                 s.accumulator = s.accumulator + c
-            case 1:
+            case SUBTRACT:
                 s.accumulator = s.accumulator - c
-            case 2:
+            case MULTIPLY:
                 s.accumulator = s.accumulator * c
-            case 3:
+            case DIVIDE:
                 s.accumulator = s.accumulator / c
     // reset operand
     s.current = null
@@ -79,11 +77,10 @@ function enter(int digit, State s) -> (State r):
 // =========================================
 
 public type Transformer is function(State)->(State)
-
-public final Transformer ADDER = &(State s -> push(0,s))
-public final Transformer SUBTRACTER = &(State s -> push(1,s))
-public final Transformer MULTIPLIER = &(State s -> push(2,s))
-public final Transformer DIVIDER = &(State s -> push(3,s))
+public final Transformer ADDER = &(State s -> push(ADD,s))
+public final Transformer SUBTRACTER = &(State s -> push(SUBTRACT,s))
+public final Transformer MULTIPLIER = &(State s -> push(MULTIPLY,s))
+public final Transformer DIVIDER = &(State s -> push(DIVIDE,s))
 
 // =========================================
 // View
@@ -93,16 +90,16 @@ final ascii::string BUTTON_STYLE = "background-color: #4CAF50; color: white; bor
 
 function button(ascii::string label, Transformer fn) -> Node<State>:
     // construct button
-    return html::button<State>([
+    return element<State>("button",[
         style<State>(BUTTON_STYLE),
         onClick(&(MouseEvent e, State s -> fn(s)))
-    ],[label])
+    ],label)
 
 function numeric(int value) -> Node<State>:
     // construct label
     ascii::string label = ascii::to_string(value)
     // construct button
-    return button(label,&(MouseEvent e, State s -> enter(value,s)))
+    return button(label,&(State s -> enter(value,s)))
 
 function view(State s) -> Node<State>:
     int current
@@ -112,17 +109,17 @@ function view(State s) -> Node<State>:
     else:
         current = s.current
     // Construct display
-    return div<State>([
+    return element<State>("div",[
         // Display
-        h1<State>(ascii::to_string(current))
+        element<State>("h1",ascii::to_string(current)),
         // Top row
-        // div<State>([numeric(7),numeric(8),numeric(9),button("/",DIVIDER)]),
-        // // Middle row
-        // div<State>([numeric(4),numeric(5),numeric(6),button("*",MULTIPLIER)]),
-        // // Bottom row
-        // div<State>([numeric(1),numeric(2),numeric(3),button("+",ADDER)]),
-        // // Operator Row
-        // div<State>([button("C",&clear),numeric(0),button("=",EXEC),button("-",SUBTRACTER)])
+        element<State>("div",[numeric(7),numeric(8),numeric(9),button("/",DIVIDER)]),
+        // Middle row
+        element<State>("div",[numeric(4),numeric(5),numeric(6),button("*",MULTIPLIER)]),
+        // Bottom row
+        element<State>("div",[numeric(1),numeric(2),numeric(3),button("+",ADDER)]),
+        // Operator Row
+        element<State>("div",[button("C",&clear),numeric(0),button("=",&execute),button("-",SUBTRACTER)])
     ])
 
 // =========================================
@@ -132,7 +129,7 @@ function view(State s) -> Node<State>:
 public export function main()->App<State>:
     return {
         // Initial state
-        model: { current: null, accumulator: 0, mode: 0 },
+        model: { current: null, accumulator: 0, mode: ADD },
         // View Transformer
         view: &view
     }
