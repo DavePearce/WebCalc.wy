@@ -6,7 +6,7 @@ import w3c::html
 import App from w3c::app
 import Node from w3c::html
 import style from w3c::html
-import onClick from w3c::html
+import click from w3c::html
 import element from w3c::html
 import MouseEvent from w3c::html
 import Event from w3c::html
@@ -67,7 +67,7 @@ function enter(int digit, State s) -> (State r):
     if s.current is null:
         s.current = digit
     else:
-        s.current = (10 * c) + digit
+        s.current = (10 * s.current) + digit
     // Done
     return s
 
@@ -91,7 +91,7 @@ function button(ascii::string label, Transformer fn) -> Node<State>:
     // construct button
     return element<State>("button",[
         style<State>(BUTTON_STYLE),
-        onClick(&(MouseEvent e, State s -> fn(s)))
+        click(&(MouseEvent e, State s -> fn(s)))
     ],label)
 
 function numeric(int value) -> Node<State>:
