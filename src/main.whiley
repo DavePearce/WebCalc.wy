@@ -34,25 +34,25 @@ function push(int mode, State s) -> (State r):
     // Done
     return s
 
+// Execute the current operation
 function execute(State s) -> (State r):
-    // FIXME: following is workaround
-    int|null c = s.current
     //
-    if c is int:
+    if s.current is int:
         switch(s.mode):
             case ADD:
-                s.accumulator = s.accumulator + c
+                s.accumulator = s.accumulator + s.current
             case SUBTRACT:
-                s.accumulator = s.accumulator - c
+                s.accumulator = s.accumulator - s.current
             case MULTIPLY:
-                s.accumulator = s.accumulator * c
+                s.accumulator = s.accumulator * s.current
             case DIVIDE:
-                s.accumulator = s.accumulator / c
+                s.accumulator = s.accumulator / s.current
     // reset operand
     s.current = null
     //
     return s
 
+// Clear the current operation and operands
 function clear(State s) -> (State r):
     //
     s.accumulator = 0
@@ -61,11 +61,10 @@ function clear(State s) -> (State r):
     //
     return s
 
+// Enter a digit into the current operand being construct.
 function enter(int digit, State s) -> (State r):
-    // FIXME: following is workaround
-    int|null c = s.current
     //
-    if c is null:
+    if s.current is null:
         s.current = digit
     else:
         s.current = (10 * c) + digit
