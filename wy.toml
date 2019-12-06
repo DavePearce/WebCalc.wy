@@ -8,5 +8,3 @@ platforms=["whiley","js"]
 
 [dependencies]
 html="0.1.8"
-js="0.1.0"
-std="0.2.15"

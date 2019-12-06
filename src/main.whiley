@@ -4,12 +4,9 @@ import std::math
 import w3c::dom
 import w3c::html
 import App from w3c::app
-import Node from w3c::html
-import style from w3c::html
-import click from w3c::html
-import element from w3c::html
-import MouseEvent from w3c::html
-import Event from w3c::html
+import click, style from w3c::html
+import button, div, h1 from w3c::html
+import Node, Event, MouseEvent from w3c::html
 
 // =========================================
 // Model
@@ -89,7 +86,7 @@ final ascii::string BUTTON_STYLE = "background-color: #4CAF50; color: white; bor
 
 function button(ascii::string label, Transformer fn) -> Node<State>:
     // construct button
-    return element<State>("button",[
+    return html::button([
         style<State>(BUTTON_STYLE),
         click(&(MouseEvent e, State s -> fn(s)))
     ],label)
@@ -108,17 +105,17 @@ function view(State s) -> Node<State>:
     else:
         current = s.current
     // Construct display
-    return element<State>("div",[
+    return div([
         // Display
-        element<State>("h1",ascii::to_string(current)),
+        h1<State>(ascii::to_string(current)),
         // Top row
-        element<State>("div",[numeric(7),numeric(8),numeric(9),button("/",DIVIDER)]),
+        div([numeric(7),numeric(8),numeric(9),button("/",DIVIDER)]),
         // Middle row
-        element<State>("div",[numeric(4),numeric(5),numeric(6),button("*",MULTIPLIER)]),
+        div([numeric(4),numeric(5),numeric(6),button("*",MULTIPLIER)]),
         // Bottom row
-        element<State>("div",[numeric(1),numeric(2),numeric(3),button("+",ADDER)]),
+        div([numeric(1),numeric(2),numeric(3),button("+",ADDER)]),
         // Operator Row
-        element<State>("div",[button("C",&clear),numeric(0),button("=",&execute),button("-",SUBTRACTER)])
+        div([button("C",&clear),numeric(0),button("=",&execute),button("-",SUBTRACTER)])
     ])
 
 // =========================================
