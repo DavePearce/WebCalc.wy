@@ -87,7 +87,7 @@ final ascii::string BUTTON_STYLE = "background-color: #4CAF50; color: white; bor
 function button(ascii::string label, Transformer fn) -> Node<State>:
     // construct button
     return html::button([
-        style<State>(BUTTON_STYLE),
+        style(BUTTON_STYLE),
         click(&(MouseEvent e, State s -> fn(s)))
     ],label)
 
@@ -107,7 +107,7 @@ function view(State s) -> Node<State>:
     // Construct display
     return div([
         // Display
-        h1<State>(ascii::to_string(current)),
+        h1(ascii::to_string(current)),
         // Top row
         div([numeric(7),numeric(8),numeric(9),button("/",DIVIDER)]),
         // Middle row

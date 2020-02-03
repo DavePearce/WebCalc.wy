@@ -1246,6 +1246,6 @@ function w3c$ajax$makeHttpRequest(method, url,handler) {
     xhttp.open(method, url, true);
     xhttp.send();
 }
-function w3c$dom$alert(wyString) {
-    alert(js$util$from_string(wyString));
+function w3c$dom$alert(message) {
+    alert(js$util$from_string(message));
 }
