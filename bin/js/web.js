@@ -45,7 +45,7 @@ function web$app$refresh$qQ5State$V(st) {
    if(old === null)  {
       st.$ref.root.appendChild(tree);
    } else  {
-      st.$ref.root.replaceChild(old, tree);
+      st.$ref.root.replaceChild(tree, old);
    }
     {
       const $3 = tree;
@@ -1056,7 +1056,7 @@ function web$html$summary$aQ9AttributeaQ4Node$Q4Node(attributes, children) {
    return web$html$element$Q6stringaQ9AttributeaQ4Node$Q4Node("summary", Wy.copy(attributes), Wy.copy(children));
 }
 function web$html$to_dom$Q4NodeQ15ActionProcessorQ3dom8Document$Q3dom4Node(node, processor, doc) {
-   if(is$Q4NodeQ6string(node))  {
+   if((typeof node) === "string")  {
       return doc.createTextNode(Wy.copy(node));
    } else  {
       let element = doc.createElement(Wy.copy(node.name));
@@ -1108,18 +1108,15 @@ function web$html$to_key_event$Q3dom13KeyboardEvent$Q13KeyboardEvent(event) {
    return new Wy.Record({altKey: event.altKey, code: event.code, ctrlKey: event.ctrlKey, isComposing: event.isComposing, key: event.key, keyCode: event.keyCode, location: event.location, metaKey: event.metaKey, repeat: event.repeat, shiftKey: event.shiftKey});
 }
 function is$u2r2Q6string5eventQ7handler7handlerr2Q6string8keyEventQ7handler7handlerr2Q6string8keyEventQ7handler7handler(v) {
-   if(((typeof v.keyEvent) === "undefined") || (!is$u1Q6stringQ6string(v.keyEvent)))  {
+   if(((typeof v.keyEvent) === "undefined") || ((typeof v.keyEvent) !== "string"))  {
       return false;
    } else if(((typeof v.handler) === "undefined") || (!is$u2Q7handlerQ7handlerf2Q13KeyboardEventv1S2v1Sav1A(v.handler)))  {
       return false;
    }
    return true;
 }
-function is$Q4NodeQ6string(v) {
-   return is$Q4NodeaQ3u16(v) && js$core$string$type(v);
-}
 function is$u3r2Q6string5eventQ7handler7handlerr2Q6string10mouseEventQ7handler7handlerr2Q6string8keyEventQ7handler7handlerr2Q6string10mouseEventQ7handler7handler(v) {
-   if(((typeof v.mouseEvent) === "undefined") || (!is$u1Q6stringQ6string(v.mouseEvent)))  {
+   if(((typeof v.mouseEvent) === "undefined") || ((typeof v.mouseEvent) !== "string"))  {
       return false;
    } else if(((typeof v.handler) === "undefined") || (!is$u3Q7handlerQ7handlerQ7handlerf2Q10MouseEventv1S2v1Sav1A(v.handler)))  {
       return false;
@@ -1127,25 +1124,16 @@ function is$u3r2Q6string5eventQ7handler7handlerr2Q6string10mouseEventQ7handler7h
    return true;
 }
 function is$Q9Attributer2Q6string3keyQ6string5value(v) {
-   if(((typeof v.key) === "undefined") || (!is$u1Q6stringQ6string(v.key)))  {
+   if(((typeof v.key) === "undefined") || ((typeof v.key) !== "string"))  {
       return false;
-   } else if(((typeof v.value) === "undefined") || (!is$u1Q6stringQ6string(v.value)))  {
+   } else if(((typeof v.value) === "undefined") || ((typeof v.value) !== "string"))  {
       return false;
    }
    return true;
-}
-function is$u1Q6stringQ6string(v) {
-   return is$u1Q6stringaQ3u16(v) && js$core$string$type(v);
-}
-function is$Q4NodeaQ3u16(v) {
-   return v.constructor === Array;
 }
 function is$u3Q7handlerQ7handlerQ7handlerf2Q10MouseEventv1S2v1Sav1A(v) {
    return true;
 }
 function is$u2Q7handlerQ7handlerf2Q13KeyboardEventv1S2v1Sav1A(v) {
-   return true;
-}
-function is$u1Q6stringaQ3u16(v) {
    return true;
 }

@@ -7,6 +7,12 @@ function js$core$string$type($) {
 function js$core$integer$type(x) {
    return (js$core$MIN_SAFE_INTEGER$static <= x) && (x <= js$core$MAX_SAFE_INTEGER$static);
 }
+function js$core$uinteger$type(x) {
+   return (0 <= x) && (x <= js$core$MAX_SAFE_INTEGER$static);
+}
+function js$core$number$type(x) {
+   return true;
+}
 function js$date$day$type(x) {
    return (x >= 0) && (x <= 6);
 }
@@ -20,6 +26,26 @@ function js$JSON$parse(str) {
 function js$JSON$stringify(item) {
     return JSON.stringify(item);
 }
+function js$core$append$Q6stringQ6string$Q6string(lhs, rhs) {
+    return lhs + rhs;
+}
+
+function js$core$append$Q6stringQ3intQ6string(lhs, rhs) {
+    return lhs + rhs;
+}
+
+function js$core$append$Q3intQ6numberQ6string(lhs, rhs) {
+    return lhs + rhs;
+}
+
+
+function js$core$append$Q6stringQ6number$Q6string(lhs, rhs) {
+    return lhs + rhs;
+}
+
+function js$core$append$Q6numberQ6string$Q6string(lhs, rhs) {
+    return lhs + rhs;
+}
 function js$date$now() {
     return Date.now();
 }
@@ -31,14 +57,16 @@ function js$math$abs(x) {
     return Math.abs(x);
 }
 
-function js$math$sin(degrees,magnitude) {
-    var radians = (degrees * Math.PI) / 180;
-    return Math.floor(Math.sin(radians) * magnitude);
+function js$math$sin(radians) {
+    return Math.sin(radians)
 }
 
-function js$math$cos(degrees,magnitude) {
-    var radians = (degrees * Math.PI) / 180;
-    return Math.floor(Math.cos(radians) * magnitude);
+function js$math$cos(radians) {
+    return Math.sin(radians)    
+}
+
+function js$math$to_degrees(radians) {
+    return (radians * Math.PI) / 180;
 }
 
 function js$math$random(magnitude) {
