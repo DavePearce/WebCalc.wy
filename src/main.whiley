@@ -1,12 +1,12 @@
 import std::ascii
 import std::math
 
-import w3c::dom
-import w3c::html
-import App from w3c::app
-import click, style from w3c::html
-import button, div, h1 from w3c::html
-import Node, Event, MouseEvent from w3c::html
+import js::core with string 
+import web::html
+import click, style from web::html
+import button, div, h1 from web::html
+import Node, Event, MouseEvent from web::html
+import App from web::app
 
 // =========================================
 // Model
@@ -23,16 +23,21 @@ public type State is {
     int accumulator
 }
 
+public type Action is {
+    int dummy
+}
+
 function push(int mode, State s) -> (State r):
+    Action[] as
     // Dxecute previous operation (if any)
-    s = execute(s)
+    (s,as) = execute(s)
     // Setup next operation
     s.mode = mode
     // Done
     return s
 
 // Execute the current operation
-function execute(State s) -> (State r):
+function execute(State s) -> (State r, Action[] as):
     //
     if s.current is int:
         switch(s.mode):
@@ -47,16 +52,16 @@ function execute(State s) -> (State r):
     // reset operand
     s.current = null
     //
-    return s
+    return s,[]
 
 // Clear the current operation and operands
-function clear(State s) -> (State r):
+function clear(State s) -> (State r, Action[] as):
     //
     s.accumulator = 0
     s.current = null
     s.mode = ADD
     //
-    return s
+    return s,[]
 
 // Enter a digit into the current operand being construct.
 function enter(int digit, State s) -> (State r):
@@ -72,32 +77,32 @@ function enter(int digit, State s) -> (State r):
 // Transformers
 // =========================================
 
-public type Transformer is function(State)->(State)
-public final Transformer ADDER = &(State s -> push(ADD,s))
-public final Transformer SUBTRACTER = &(State s -> push(SUBTRACT,s))
-public final Transformer MULTIPLIER = &(State s -> push(MULTIPLY,s))
-public final Transformer DIVIDER = &(State s -> push(DIVIDE,s))
+public type Transformer is function(State)->(State,Action[])
+public final Transformer ADDER = &(State s -> (push(ADD,s),[]))
+public final Transformer SUBTRACTER = &(State s -> (push(SUBTRACT,s),[]))
+public final Transformer MULTIPLIER = &(State s -> (push(MULTIPLY,s),[]))
+public final Transformer DIVIDER = &(State s -> (push(DIVIDE,s),[]))
 
 // =========================================
 // View
 // =========================================
 
-final ascii::string BUTTON_STYLE = "background-color: #4CAF50; color: white; border: none; padding: 15px 32px; display: inline-block; font-size: 16px;"
+final string BUTTON_STYLE = "background-color: #4CAF50; color: white; border: none; padding: 15px 32px; display: inline-block; font-size: 16px;"
 
-function button(ascii::string label, Transformer fn) -> Node<State>:
+function button(string label, Transformer fn) -> Node<State,Action>:
     // construct button
     return html::button([
         style(BUTTON_STYLE),
         click(&(MouseEvent e, State s -> fn(s)))
     ],label)
 
-function numeric(int value) -> Node<State>:
+function numeric(int value) -> Node<State,Action>:
     // construct label
-    ascii::string label = ascii::to_string(value)
+    string label = (string) ascii::to_string(value)
     // construct button
-    return button(label,&(State s -> enter(value,s)))
+    return button(label,&(State s -> (enter(value,s),[])))
 
-function view(State s) -> Node<State>:
+function view(State s) -> Node<State,Action>:
     int current
     // Normalise current value
     if s.current is null:
@@ -107,7 +112,7 @@ function view(State s) -> Node<State>:
     // Construct display
     return div([
         // Display
-        h1(ascii::to_string(current)),
+        h1((string) ascii::to_string(current)),
         // Top row
         div([numeric(7),numeric(8),numeric(9),button("/",DIVIDER)]),
         // Middle row
@@ -122,10 +127,13 @@ function view(State s) -> Node<State>:
 // Application
 // =========================================
 
-public export function main()->App<State>:
+public export function main()->App<State,Action>:
+    State state = { current: null, accumulator: 0, mode: ADD }
     return {
         // Initial state
-        model: { current: null, accumulator: 0, mode: ADD },
+        model: state,
         // View Transformer
-        view: &view
+        view: &view,
+        // Action Processor (dummy)
+        processor: &(State st, Action[] as -> st)
     }

@@ -1,10 +1,10 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <html> <head>
 <title></title>
-<script type="text/javascript" src="wy.js"></script>
-<script type="text/javascript" src="bin/js/js.js"></script>
 <script type="text/javascript" src="bin/js/std.js"></script>
-<script type="text/javascript" src="bin/js/html.js"></script>
+<script type="text/javascript" src="bin/js/js.js"></script>
+<script type="text/javascript" src="bin/js/dom.js"></script>
+<script type="text/javascript" src="bin/js/web.js"></script>
 <script type="text/javascript" src="bin/js/main.js"></script>
 </head>
 
@@ -15,7 +15,7 @@
   window.onload = function() {
     var root = document.getElementById("test");
     //
-    w3c$app$run(main$main(),root,document);
+    web$app$run(main$main(),root,document);
 }
 </script>
 </body>
