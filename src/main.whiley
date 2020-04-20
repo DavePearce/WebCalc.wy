@@ -3,6 +3,7 @@ import std::math
 
 import js::core with string 
 import web::html
+import web::io
 import click, style from web::html
 import button, div, h1 from web::html
 import Node, Event, MouseEvent from web::html
@@ -28,7 +29,7 @@ public type Action is {
 }
 
 function push(int mode, State s) -> (State r):
-    Action[] as
+    io::Action<State>[] as
     // Dxecute previous operation (if any)
     (s,as) = execute(s)
     // Setup next operation
@@ -37,14 +38,14 @@ function push(int mode, State s) -> (State r):
     return s
 
 // Execute the current operation
-function execute(State s) -> (State r, Action[] as):
+function execute(State s) -> (State r, io::Action<State>[] as):
     //
     if s.current is int:
         switch(s.mode):
             case ADD:
                 s.accumulator = s.accumulator + s.current
             case SUBTRACT:
-                s.accumulator = s.accumulator - s.current
+                 s.accumulator = s.accumulator - s.current
             case MULTIPLY:
                 s.accumulator = s.accumulator * s.current
             case DIVIDE:
@@ -55,7 +56,7 @@ function execute(State s) -> (State r, Action[] as):
     return s,[]
 
 // Clear the current operation and operands
-function clear(State s) -> (State r, Action[] as):
+function clear(State s) -> (State r, io::Action<State>[] as):
     //
     s.accumulator = 0
     s.current = null
@@ -77,7 +78,7 @@ function enter(int digit, State s) -> (State r):
 // Transformers
 // =========================================
 
-public type Transformer is function(State)->(State,Action[])
+public type Transformer is function(State)->(State,io::Action<State>[])
 public final Transformer ADDER = &(State s -> (push(ADD,s),[]))
 public final Transformer SUBTRACTER = &(State s -> (push(SUBTRACT,s),[]))
 public final Transformer MULTIPLIER = &(State s -> (push(MULTIPLY,s),[]))
@@ -89,20 +90,20 @@ public final Transformer DIVIDER = &(State s -> (push(DIVIDE,s),[]))
 
 final string BUTTON_STYLE = "background-color: #4CAF50; color: white; border: none; padding: 15px 32px; display: inline-block; font-size: 16px;"
 
-function button(string label, Transformer fn) -> Node<State,Action>:
+function button(string label, Transformer fn) -> Node<State,io::Action<State> >:
     // construct button
     return html::button([
         style(BUTTON_STYLE),
         click(&(MouseEvent e, State s -> fn(s)))
     ],label)
 
-function numeric(int value) -> Node<State,Action>:
+function numeric(int value) -> Node<State,io::Action<State> >:
     // construct label
     string label = (string) ascii::to_string(value)
     // construct button
     return button(label,&(State s -> (enter(value,s),[])))
 
-function view(State s) -> Node<State,Action>:
+function view(State s) -> Node<State,io::Action<State> >:
     int current
     // Normalise current value
     if s.current is null:
@@ -127,13 +128,18 @@ function view(State s) -> Node<State,Action>:
 // Application
 // =========================================
 
-public export function main()->App<State,Action>:
+public export function main()->io::App<State>:
     State state = { current: null, accumulator: 0, mode: ADD }
     return {
         // Initial state
         model: state,
         // View Transformer
         view: &view,
-        // Action Processor (dummy)
-        processor: &(State st, Action[] as -> st)
+        // Action Processor (DUMMY)
+        process: &dummy_processor
     }
+
+method dummy_processor(&io::State<State> st, io::Action<State> as):
+    // FIXME: there is a bug in that we cannot use io::processor for
+    // reasons unknown.
+    skip

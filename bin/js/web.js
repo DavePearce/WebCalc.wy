@@ -1,69 +1,93 @@
 'use strict';
-function web$app$State$Q3AppQ3dom4NodeQ3dom8Document$Q5State(app, root, doc) {
-   return new Wy.Record({app: Wy.copy(app), root: root, processor: null, tree: null, document: doc});
-}
 function web$app$run(app, root, doc) {
-   let state = new Wy.Ref(web$app$State$Q3AppQ3dom4NodeQ3dom8Document$Q5State(Wy.copy(app), root, doc));
-    {
-      const $0 = web$app$create_action_processor$qQ5State$Q4html15ActionProcessor(state);
-      state.$ref.processor = $0;
-   }
+   let state = new Wy.Ref(new Wy.Record({app: Wy.copy(app), root: root, tree: null, document: doc}));
    web$app$refresh$qQ5State$V(state);
 }
-function web$app$create_action_processor$qQ5State$Q4html15ActionProcessor(st) {
-   return new Wy.Record({mouse: function(st) {
-      return function(e, h) {
-         return web$app$process_event$v1EQ7handlerqQ5State$V(Wy.copy(e), h, st);
-      };
-   }(st), keyboard: function(st) {
-      return function(e, h) {
-         return web$app$process_event$v1EQ7handlerqQ5State$V(Wy.copy(e), h, st);
-      };
-   }(st), other: function(st) {
-      return function(e, h) {
-         return web$app$process_event$v1EQ7handlerqQ5State$V(Wy.copy(e), h, st);
-      };
-   }(st)});
-}
-function web$app$process_event$v1EQ7handlerqQ5State$V(e, h, st) {
-   let [model, actions] = h(Wy.copy(e), Wy.copy(st.$ref.app.model));
-    {
-      const $1 = st.$ref.app.processor(Wy.copy(model), Wy.copy(actions));
-      model = $1;
-   }
-    {
-      const $2 = Wy.copy(model);
-      st.$ref.app.model = $2;
-   }
-   web$app$refresh$qQ5State$V(st);
-}
 function web$app$refresh$qQ5State$V(st) {
-   let p = web$app$unwrap$u2NQ4html15ActionProcessor$Q4html15ActionProcessor(st.$ref.processor);
    let old = st.$ref.tree;
    let init = st.$ref.app.view(Wy.copy(st.$ref.app.model));
-   let tree = web$html$to_dom$Q4NodeQ15ActionProcessorQ3dom8Document$Q3dom4Node(Wy.copy(init), Wy.copy(p), st.$ref.document);
+   let tree = web$app$to_dom$Q4html4NodeqQ5State$Q3dom4Node(Wy.copy(init), st);
    if(old === null)  {
       st.$ref.root.appendChild(tree);
    } else  {
       st.$ref.root.replaceChild(tree, old);
    }
     {
-      const $3 = tree;
-      st.$ref.tree = $3;
+      const $0 = tree;
+      st.$ref.tree = $0;
    }
 }
-function web$app$unwrap$u2NQ4html15ActionProcessor$Q4html15ActionProcessor(p) {
-   if(p === null)  {
-      return web$app$unwrap$u2NQ4html15ActionProcessor$Q4html15ActionProcessor(p);
+function web$app$to_dom$Q4html4NodeqQ5State$Q3dom4Node(node, st) {
+   if((typeof node) === "string")  {
+      return st.$ref.document.createTextNode(Wy.copy(node));
    } else  {
-      return Wy.copy(p);
+      let element = st.$ref.document.createElement(Wy.copy(node.name));
+      for(let i = 0;i < node.children.length;i = i + 1) {
+         let child = web$app$to_dom$Q4html4NodeqQ5State$Q3dom4Node(Wy.copy(node.children[i]), st);
+         element.appendChild(child);
+      }
+      for(let j = 0;j < node.attributes.length;j = j + 1) {
+         let attr = Wy.copy(node.attributes[j]);
+         if(is$Q4html9Attributer2Q6string3keyQ6string5value(attr))  {
+            element.setAttribute(Wy.copy(attr.key), Wy.copy(attr.value));
+         } else  {
+            if(is$u3r2Q6string5eventQ7handler7handlerr2Q6string10mouseEventQ7handler7handlerr2Q6string8keyEventQ7handler7handlerr2Q6string10mouseEventQ7handler7handler(attr))  {
+               let handler = attr.handler;
+               element.addEventListener(Wy.copy(attr.mouseEvent), function(st, handler) {
+                  return function(e) {
+                     return web$app$process_mouse_event$Q3dom10MouseEventQ4html7handlerqQ5State$V(e, handler, st);
+                  };
+               }(st, handler));
+            } else  {
+               if(is$u2r2Q6string5eventQ7handler7handlerr2Q6string8keyEventQ7handler7handlerr2Q6string8keyEventQ7handler7handler(attr))  {
+                  let handler = attr.handler;
+                  element.addEventListener(Wy.copy(attr.keyEvent), function(st, handler) {
+                     return function(e) {
+                        return web$app$process_keyboard_event$Q3dom13KeyboardEventQ4html7handlerqQ5State$V(e, handler, st);
+                     };
+                  }(st, handler));
+               } else  {
+                  let handler = attr.handler;
+                  element.addEventListener(Wy.copy(attr.event), function(st, handler) {
+                     return function(e) {
+                        return web$app$process_other_event$Q3dom5EventQ4html7handlerqQ5State$V(e, handler, st);
+                     };
+                  }(st, handler));
+               }
+            }
+         }
+      }
+      return element;
    }
+}
+function web$app$process_mouse_event$Q3dom10MouseEventQ4html7handlerqQ5State$V(e, h, st) {
+   web$app$process_event$v1EQ4html7handlerqQ5State$V(web$html$to_mouse_event$Q3dom10MouseEvent$Q10MouseEvent(e), h, st);
+}
+function web$app$process_keyboard_event$Q3dom13KeyboardEventQ4html7handlerqQ5State$V(e, h, st) {
+   web$app$process_event$v1EQ4html7handlerqQ5State$V(web$html$to_key_event$Q3dom13KeyboardEvent$Q13KeyboardEvent(e), h, st);
+}
+function web$app$process_other_event$Q3dom5EventQ4html7handlerqQ5State$V(e, h, st) {
+   web$app$process_event$v1EQ4html7handlerqQ5State$V(web$html$to_event$Q3dom5Event$Q4html5Event(e), h, st);
+}
+function web$app$process_event$v1EQ4html7handlerqQ5State$V(e, h, st) {
+   let [model, actions] = h(Wy.copy(e), Wy.copy(st.$ref.app.model));
+   for(let i = 0;i < actions.length;i = i + 1) {
+      st.$ref.app.process(st, Wy.copy(actions[i]));
+   }
+    {
+      const $1 = Wy.copy(model);
+      st.$ref.app.model = $1;
+   }
+   web$app$refresh$qQ5State$V(st);
 }
 function web$html$class$Q6string$Q9Attribute(text) {
    return new Wy.Record({key: "class", value: Wy.copy(text)});
 }
 function web$html$disabled$V$Q9Attribute() {
    return new Wy.Record({key: "disabled", value: ""});
+}
+function web$html$sfor$Q6string$Q9Attribute(text) {
+   return new Wy.Record({key: "for", value: Wy.copy(text)});
 }
 function web$html$id$Q6string$Q9Attribute(text) {
    return new Wy.Record({key: "id", value: Wy.copy(text)});
@@ -73,6 +97,9 @@ function web$html$name$Q6string$Q9Attribute(text) {
 }
 function web$html$style$Q6string$Q9Attribute(text) {
    return new Wy.Record({key: "style", value: Wy.copy(text)});
+}
+function web$html$tYpe$Q6string$Q9Attribute(text) {
+   return new Wy.Record({key: "type", value: Wy.copy(text)});
 }
 function web$html$tabindex$I$Q9Attribute(index) {
    return new Wy.Record({key: "tabindex", value: Wy.fromString(std$ascii$to_string$I$Q6string(index))});
@@ -1055,49 +1082,6 @@ function web$html$summary$aQ9AttributeQ4Node$Q4Node(attributes, child) {
 function web$html$summary$aQ9AttributeaQ4Node$Q4Node(attributes, children) {
    return web$html$element$Q6stringaQ9AttributeaQ4Node$Q4Node("summary", Wy.copy(attributes), Wy.copy(children));
 }
-function web$html$to_dom$Q4NodeQ15ActionProcessorQ3dom8Document$Q3dom4Node(node, processor, doc) {
-   if((typeof node) === "string")  {
-      return doc.createTextNode(Wy.copy(node));
-   } else  {
-      let element = doc.createElement(Wy.copy(node.name));
-      for(let i = 0;i < node.children.length;i = i + 1) {
-         let child = web$html$to_dom$Q4NodeQ15ActionProcessorQ3dom8Document$Q3dom4Node(Wy.copy(node.children[i]), Wy.copy(processor), doc);
-         element.appendChild(child);
-      }
-      for(let j = 0;j < node.attributes.length;j = j + 1) {
-         let attr = Wy.copy(node.attributes[j]);
-         if(is$Q9Attributer2Q6string3keyQ6string5value(attr))  {
-            element.setAttribute(Wy.copy(attr.key), Wy.copy(attr.value));
-         } else  {
-            if(is$u3r2Q6string5eventQ7handler7handlerr2Q6string10mouseEventQ7handler7handlerr2Q6string8keyEventQ7handler7handlerr2Q6string10mouseEventQ7handler7handler(attr))  {
-               let handler = attr.handler;
-               element.addEventListener(Wy.copy(attr.mouseEvent), function(processor, handler) {
-                  return function(e) {
-                     return processor.mouse(web$html$to_mouse_event$Q3dom10MouseEvent$Q10MouseEvent(e), handler);
-                  };
-               }(processor, handler));
-            } else  {
-               if(is$u2r2Q6string5eventQ7handler7handlerr2Q6string8keyEventQ7handler7handlerr2Q6string8keyEventQ7handler7handler(attr))  {
-                  let handler = attr.handler;
-                  element.addEventListener(Wy.copy(attr.keyEvent), function(processor, handler) {
-                     return function(e) {
-                        return processor.keyboard(web$html$to_key_event$Q3dom13KeyboardEvent$Q13KeyboardEvent(e), handler);
-                     };
-                  }(processor, handler));
-               } else  {
-                  let handler = attr.handler;
-                  element.addEventListener(Wy.copy(attr.event), function(processor, handler) {
-                     return function(e) {
-                        return processor.other(web$html$to_event$Q3dom5Event$Q4html5Event(e), handler);
-                     };
-                  }(processor, handler));
-               }
-            }
-         }
-      }
-      return element;
-   }
-}
 function web$html$to_event$Q3dom5Event$Q4html5Event(event) {
    return new Wy.Record({timeStamp: event.timeStamp});
 }
@@ -1107,10 +1091,109 @@ function web$html$to_mouse_event$Q3dom10MouseEvent$Q10MouseEvent(event) {
 function web$html$to_key_event$Q3dom13KeyboardEvent$Q13KeyboardEvent(event) {
    return new Wy.Record({altKey: event.altKey, code: event.code, ctrlKey: event.ctrlKey, isComposing: event.isComposing, key: event.key, keyCode: event.keyCode, location: event.location, metaKey: event.metaKey, repeat: event.repeat, shiftKey: event.shiftKey});
 }
+function web$io$processor$qQ5StateQ6Action$V(st, action) {
+   if(is$Q6Actionr3Q6string3urlQ10ok_handler2okQ11err_handler5error(action))  {
+      web$io$process_request$qQ5StateQ3Get$V(st, Wy.copy(action));
+   } else  {
+      web$io$process_request$qQ5StateQ4Post$V(st, Wy.copy(action));
+   }
+}
+function web$io$process_request$qQ5StateQ3Get$V(st, action) {
+   let ok = function(st, action) {
+      return function(s) {
+         return web$io$process_response$Q6stringqQ5StateQ10ok_handler$V(Wy.copy(s), st, action.ok);
+      };
+   }(st, action);
+   let err = function(st, action) {
+      return function(i) {
+         return web$io$process_response$IqQ5StateQ11err_handler$V(i, st, action.error);
+      };
+   }(st, action);
+   web$io$get$Q6stringmQ6stringVmIV$V(Wy.copy(action.url), ok, err);
+}
+function web$io$process_request$qQ5StateQ4Post$V(st, action) {
+   let ok = function(action, st) {
+      return function(s) {
+         return web$io$process_response$Q6stringqQ5StateQ10ok_handler$V(Wy.copy(s), st, action.ok);
+      };
+   }(action, st);
+   let err = function(action, st) {
+      return function(i) {
+         return web$io$process_response$IqQ5StateQ11err_handler$V(i, st, action.error);
+      };
+   }(action, st);
+   web$io$post$Q6stringQ6stringmQ6stringVmIV$V(Wy.copy(action.url), Wy.copy(action.payload), ok, err);
+}
+function web$io$process_response$Q6stringqQ5StateQ10ok_handler$V(response, st, fn) {
+   let [m, as] = fn(Wy.copy(st.$ref.app.model), Wy.copy(response));
+    {
+      const $2 = Wy.copy(m);
+      st.$ref.app.model = $2;
+   }
+   for(let i = 0;i < as.length;i = i + 1) {
+      web$io$processor$qQ5StateQ6Action$V(st, Wy.copy(as[i]));
+   }
+}
+function web$io$process_response$IqQ5StateQ11err_handler$V(code, st, fn) {
+   let [m, as] = fn(Wy.copy(st.$ref.app.model));
+    {
+      const $3 = Wy.copy(m);
+      st.$ref.app.model = $3;
+   }
+   for(let i = 0;i < as.length;i = i + 1) {
+      web$io$processor$qQ5StateQ6Action$V(st, Wy.copy(as[i]));
+   }
+}
+const web$io$HTTP_OK$static = 200;
+function web$io$get$Q6stringmQ6stringVmIV$V(url, success, error) {
+   let xhttp = w3c$ajax$newXMLHttpRequest();
+   xhttp.open("GET", Wy.copy(url), true);
+    {
+      const $4 = function(success, xhttp, error) {
+         return function() {
+            return web$io$response_handler$Q14XMLHttpRequestmQ6stringVmIV$V(xhttp, success, error);
+         };
+      }(success, xhttp, error);
+      xhttp.onreadystatechange = $4;
+   }
+   xhttp.send("");
+}
+function web$io$post$Q6stringQ6stringmQ6stringVmIV$V(url, data, success, error) {
+   let xhttp = w3c$ajax$newXMLHttpRequest();
+   xhttp.open("POST", Wy.copy(url), true);
+   xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    {
+      const $5 = function(success, xhttp, error) {
+         return function() {
+            return web$io$response_handler$Q14XMLHttpRequestmQ6stringVmIV$V(xhttp, success, error);
+         };
+      }(success, xhttp, error);
+      xhttp.onreadystatechange = $5;
+   }
+   xhttp.send(Wy.copy(data));
+}
+function web$io$response_handler$Q14XMLHttpRequestmQ6stringVmIV$V(xhttp, success, error) {
+   if(xhttp.readyState === w3c$ajax$DONE$static)  {
+      let status = xhttp.status;
+      if(status === web$io$HTTP_OK$static)  {
+         success(xhttp.responseText);
+      } else  {
+         error(status);
+      }
+   }
+}
 function is$u2r2Q6string5eventQ7handler7handlerr2Q6string8keyEventQ7handler7handlerr2Q6string8keyEventQ7handler7handler(v) {
    if(((typeof v.keyEvent) === "undefined") || ((typeof v.keyEvent) !== "string"))  {
       return false;
    } else if(((typeof v.handler) === "undefined") || (!is$u2Q7handlerQ7handlerf2Q13KeyboardEventv1S2v1Sav1A(v.handler)))  {
+      return false;
+   }
+   return true;
+}
+function is$Q4html9Attributer2Q6string3keyQ6string5value(v) {
+   if(((typeof v.key) === "undefined") || ((typeof v.key) !== "string"))  {
+      return false;
+   } else if(((typeof v.value) === "undefined") || ((typeof v.value) !== "string"))  {
       return false;
    }
    return true;
@@ -1123,13 +1206,8 @@ function is$u3r2Q6string5eventQ7handler7handlerr2Q6string10mouseEventQ7handler7h
    }
    return true;
 }
-function is$Q9Attributer2Q6string3keyQ6string5value(v) {
-   if(((typeof v.key) === "undefined") || ((typeof v.key) !== "string"))  {
-      return false;
-   } else if(((typeof v.value) === "undefined") || ((typeof v.value) !== "string"))  {
-      return false;
-   }
-   return true;
+function is$Q6Actionr3Q6string3urlQ10ok_handler2okQ11err_handler5error(v) {
+   return Object.keys(v).length === 3;
 }
 function is$u3Q7handlerQ7handlerQ7handlerf2Q10MouseEventv1S2v1Sav1A(v) {
    return true;
