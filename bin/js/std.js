@@ -635,15 +635,15 @@ function std$collections$hash_map$to_array$Q7HashMap$aQ4Pair(map) {
 }
 function std$collections$hash_map$iterator$Q7HashMap$Q8Iterator(map) {
    let [b, i] = std$collections$hash_map$advance$Q7HashMapQ4uintQ4uint$Q4uintQ4uint(Wy.copy(map), 0, 0);
-   return new Wy.Record({get: function(map, b, i) {
+   return new Wy.Record({get: function(b, map, i) {
       return function() {
          return std$collections$hash_map$get$Q7HashMapQ4uintQ4uint$Q6Option(Wy.copy(map), b, i);
       };
-   }(map, b, i), next: function(map, b, i) {
+   }(b, map, i), next: function(b, map, i) {
       return function() {
          return std$collections$hash_map$next$Q7HashMapQ4uintQ4uint$Q8Iterator(Wy.copy(map), b, i);
       };
-   }(map, b, i)});
+   }(b, map, i)});
 }
 function std$collections$hash_map$get$Q7HashMapQ4uintQ4uint$Q6Option(map, bucket, index) {
    if(bucket < map.buckets.length)  {
@@ -654,15 +654,15 @@ function std$collections$hash_map$get$Q7HashMapQ4uintQ4uint$Q6Option(map, bucket
 }
 function std$collections$hash_map$next$Q7HashMapQ4uintQ4uint$Q8Iterator(map, bucket, index) {
    let [b, i] = std$collections$hash_map$advance$Q7HashMapQ4uintQ4uint$Q4uintQ4uint(Wy.copy(map), bucket, index + 1);
-   return new Wy.Record({get: function(map, b, i) {
+   return new Wy.Record({get: function(b, map, i) {
       return function() {
          return std$collections$hash_map$get$Q7HashMapQ4uintQ4uint$Q6Option(Wy.copy(map), b, i);
       };
-   }(map, b, i), next: function(map, b, i) {
+   }(b, map, i), next: function(b, map, i) {
       return function() {
          return std$collections$hash_map$next$Q7HashMapQ4uintQ4uint$Q8Iterator(Wy.copy(map), b, i);
       };
-   }(map, b, i)});
+   }(b, map, i)});
 }
 function std$collections$hash_map$advance$Q7HashMapQ4uintQ4uint$Q4uintQ4uint(map, bucket, index) {
    let i;
@@ -1127,6 +1127,21 @@ function std$utf8$length$Q6string$Q4uint(str) {
    }
    return len;
 }
+function is$u2Q4uintNQ4uint(v) {
+   return ((typeof v) === "number") && std$integer$uint$type(v);
+}
+function is$Q6OptionQ4None(v) {
+   return (v === null) && std$option$None$type(v);
+}
+function is$Q6OptionQ4Some(v) {
+   return is$Q6Optionr1v1T5value(v) && std$option$Some$type(v);
+}
+function is$u2Q4NoneQ4SomeQ4None(v) {
+   return (v === null) && std$option$None$type(v);
+}
+function is$u2NQ4uintQ4uint(v) {
+   return ((typeof v) === "number") && std$integer$uint$type(v);
+}
 function is$u2Q4NoneQ4SomeQ4None(v) {
    return (v === null) && std$option$None$type(v);
 }
@@ -1136,24 +1151,9 @@ function is$Q6OptionQ4None(v) {
 function is$Q6OptionQ4Some(v) {
    return is$Q6Optionr1v1S5value(v) && std$option$Some$type(v);
 }
-function is$u2NQ4uintQ4uint(v) {
-   return ((typeof v) === "number") && std$integer$uint$type(v);
-}
-function is$Q6OptionQ4None(v) {
-   return (v === null) && std$option$None$type(v);
-}
-function is$u2Q4NoneQ4SomeQ4None(v) {
-   return (v === null) && std$option$None$type(v);
-}
-function is$Q6OptionQ4Some(v) {
-   return is$Q6Optionr1v1T5value(v) && std$option$Some$type(v);
-}
-function is$u2Q4uintNQ4uint(v) {
-   return ((typeof v) === "number") && std$integer$uint$type(v);
-}
-function is$Q6Optionr1v1T5value(v) {
+function is$Q6Optionr1v1S5value(v) {
    return true;
 }
-function is$Q6Optionr1v1S5value(v) {
+function is$Q6Optionr1v1T5value(v) {
    return true;
 }
