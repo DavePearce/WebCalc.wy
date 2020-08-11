@@ -1,20 +1,23 @@
 'use strict';
 function web$app$run(app, root, doc) {
-   let state = new Wy.Ref(new Wy.Record({app: Wy.copy(app), root: root, tree: null, document: doc}));
+   let state = new Wy.Ref(new Wy.Record({app: Wy.copy(app), root: root, rendering: null, document: doc}));
    web$app$refresh$qQ5State$V(state);
 }
 function web$app$refresh$qQ5State$V(st) {
-   let old = st.$ref.tree;
-   let init = st.$ref.app.view(Wy.copy(st.$ref.app.model));
-   let tree = web$app$to_dom$Q4html4NodeqQ5State$Q3dom4Node(Wy.copy(init), st);
-   if(old === null)  {
-      st.$ref.root.appendChild(tree);
+   let current = st.$ref.rendering;
+   let m = st.$ref.app.view(Wy.copy(st.$ref.app.model));
+   let t;
+   if(current === null)  {
+      t = web$app$to_dom$Q4html4NodeqQ5State$Q3dom4Node(Wy.copy(m), st);
+      st.$ref.root.appendChild(t);
    } else  {
-      st.$ref.root.replaceChild(tree, old);
+      let update = web$diff$create$Q4html4NodeQ4html4Node$Q9Operation(Wy.copy(current.model), Wy.copy(m));
+      t = web$app$update_dom$Q3dom4NodeQ4diff9OperationqQ5State$Q3dom4Node(current.view, Wy.copy(update), st);
+      st.$ref.root.replaceChild(t, current.view);
    }
     {
-      const $0 = tree;
-      st.$ref.tree = $0;
+      const $0 = new Wy.Record({model: Wy.copy(m), view: t});
+      st.$ref.rendering = $0;
    }
 }
 function web$app$to_dom$Q4html4NodeqQ5State$Q3dom4Node(node, st) {
@@ -60,6 +63,58 @@ function web$app$to_dom$Q4html4NodeqQ5State$Q3dom4Node(node, st) {
       return element;
    }
 }
+function web$app$update_dom$Q3dom4NodeQ4diff9OperationqQ5State$Q3dom4Node(tree, op, st) {
+   if(op === null)  {
+      return tree;
+   } else  {
+      if(is$u2r2au2NQ4html9Attribute10attributesaQ9Operation8childrenr1Q4html4Node4noder1Q4html4Node4node(op))  {
+         return web$app$to_dom$Q4html4NodeqQ5State$Q3dom4Node(Wy.copy(op.node), st);
+      } else  {
+         if(tree.hasChildNodes())  {
+            web$app$update_children$Q3dom4NodeaQ4diff9OperationqQ5State$V(tree, Wy.copy(op.children), st);
+         }
+      }
+   }
+   web$app$resize_children$Q3dom4NodeaQ4diff9OperationqQ5State$V(tree, Wy.copy(op.children), st);
+   return tree;
+}
+function web$app$update_children$Q3dom4NodeaQ4diff9OperationqQ5State$V(tree, operations, st) {
+   let children = tree.childNodes;
+   let max = std$math$max$II$I(children.length, operations.length);
+   for(let i = 0;i < max;i = i + 1) {
+      let ithChild = children[i];
+      let ithOp = Wy.copy(operations[i]);
+      if(ithOp !== null)  {
+         let t = web$app$update_dom$Q3dom4NodeQ4diff9OperationqQ5State$Q3dom4Node(ithChild, Wy.copy(ithOp), st);
+         tree.replaceChild(t, ithChild);
+      }
+   }
+}
+function web$app$resize_children$Q3dom4NodeaQ4diff9OperationqQ5State$V(tree, operations, st) {
+   let size;
+   if(tree.hasChildNodes())  {
+      size = tree.childNodes.length;
+   } else  {
+      size = 0;
+   }
+   if(size <= operations.length)  {
+      for(let i = size;i < operations.length;i = i + 1) {
+         let ith = Wy.copy(operations[i]);
+         if(is$Q4diff9Operationr1Q4html4Node4node(ith))  {
+            let t = web$app$to_dom$Q4html4NodeqQ5State$Q3dom4Node(Wy.copy(ith.node), st);
+            tree.appendChild(t);
+         }
+      }
+   } else  {
+      while(size > 0)  {
+         tree.removeChild(tree.lastChild);
+          {
+            const $1 = size - 1;
+            size = $1;
+         }
+      }
+   }
+}
 function web$app$process_mouse_event$Q3dom10MouseEventQ4html7handlerqQ5State$V(e, h, st) {
    web$app$process_event$v1EQ4html7handlerqQ5State$V(web$html$to_mouse_event$Q3dom10MouseEvent$Q10MouseEvent(e), h, st);
 }
@@ -72,13 +127,39 @@ function web$app$process_other_event$Q3dom5EventQ4html7handlerqQ5State$V(e, h, s
 function web$app$process_event$v1EQ4html7handlerqQ5State$V(e, h, st) {
    let [model, actions] = h(Wy.copy(e), Wy.copy(st.$ref.app.model));
     {
-      const $1 = Wy.copy(model);
-      st.$ref.app.model = $1;
+      const $2 = Wy.copy(model);
+      st.$ref.app.model = $2;
    }
    for(let i = 0;i < actions.length;i = i + 1) {
       st.$ref.app.process(st, Wy.copy(actions[i]));
    }
    web$app$refresh$qQ5State$V(st);
+}
+function web$diff$create$Q4html4NodeQ4html4Node$Q9Operation(before, after) {
+   if(Wy.equals(before, after))  {
+      return null;
+   } else  {
+      if(((typeof before) === "string") || (((typeof after) === "string") || (!Wy.equals(before.name, after.name))))  {
+         return new Wy.Record({node: Wy.copy(after)});
+      } else  {
+         let bChildren = Wy.copy(before.children);
+         let aChildren = Wy.copy(after.children);
+         let operations = Wy.array(null, after.children.length);
+         if(bChildren.length < aChildren.length)  {
+            for(let i = 0;i < bChildren.length;i = i + 1) {
+               operations[i] = web$diff$create$Q4html4NodeQ4html4Node$Q9Operation(Wy.copy(bChildren[i]), Wy.copy(aChildren[i]));
+            }
+            for(let i = bChildren.length;i < aChildren.length;i = i + 1) {
+               operations[i] = new Wy.Record({node: Wy.copy(aChildren[i])});
+            }
+         } else  {
+            for(let i = 0;i < aChildren.length;i = i + 1) {
+               operations[i] = web$diff$create$Q4html4NodeQ4html4Node$Q9Operation(Wy.copy(bChildren[i]), Wy.copy(aChildren[i]));
+            }
+         }
+         return new Wy.Record({attributes: Wy.copy(after.attributes), children: Wy.copy(operations)});
+      }
+   }
 }
 function web$html$class$Q6string$Q9Attribute(text) {
    return new Wy.Record({key: "class", value: Wy.copy(text)});
@@ -1167,8 +1248,8 @@ function web$io$processor$qQ5StateQ6Action$V(st, action) {
 function web$io$process_event$qQ5StateQ7handler$V(st, fn) {
    let [m, as] = fn(Wy.copy(st.$ref.app.model));
     {
-      const $2 = Wy.copy(m);
-      st.$ref.app.model = $2;
+      const $3 = Wy.copy(m);
+      st.$ref.app.model = $3;
    }
    for(let i = 0;i < as.length;i = i + 1) {
       web$io$processor$qQ5StateQ6Action$V(st, Wy.copy(as[i]));
@@ -1177,8 +1258,8 @@ function web$io$process_event$qQ5StateQ7handler$V(st, fn) {
 function web$io$consume_event$v1TqQ5StateQ8consumer$V(response, st, fn) {
    let [m, as] = fn(Wy.copy(st.$ref.app.model), Wy.copy(response));
     {
-      const $3 = Wy.copy(m);
-      st.$ref.app.model = $3;
+      const $4 = Wy.copy(m);
+      st.$ref.app.model = $4;
    }
    for(let i = 0;i < as.length;i = i + 1) {
       web$io$processor$qQ5StateQ6Action$V(st, Wy.copy(as[i]));
@@ -1189,12 +1270,12 @@ function web$io$get$Q6stringmQ6stringVmIV$V(url, success, error) {
    let xhttp = w3c$ajax$newXMLHttpRequest();
    xhttp.open("GET", Wy.copy(url), true);
     {
-      const $4 = function(error, xhttp, success) {
+      const $5 = function(error, xhttp, success) {
          return function() {
             return web$io$response_handler$Q14XMLHttpRequestmQ6stringVmIV$V(xhttp, success, error);
          };
       }(error, xhttp, success);
-      xhttp.onreadystatechange = $4;
+      xhttp.onreadystatechange = $5;
    }
    xhttp.send("");
 }
@@ -1203,12 +1284,12 @@ function web$io$post$Q6stringQ6stringmQ6stringVmIV$V(url, data, success, error) 
    xhttp.open("POST", Wy.copy(url), true);
    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     {
-      const $5 = function(error, xhttp, success) {
+      const $6 = function(error, xhttp, success) {
          return function() {
             return web$io$response_handler$Q14XMLHttpRequestmQ6stringVmIV$V(xhttp, success, error);
          };
       }(error, xhttp, success);
-      xhttp.onreadystatechange = $5;
+      xhttp.onreadystatechange = $6;
    }
    xhttp.send(Wy.copy(data));
 }
@@ -1243,6 +1324,12 @@ function is$u3r2Q6string5eventQ7handler7handlerr2Q6string10mouseEventQ7handler7h
 }
 function is$Q6Actionr3Q6string3urlQ8consumer2okQ7handler5error(v) {
    return Object.keys(v).length === 3;
+}
+function is$Q4diff9Operationr1Q4html4Node4node(v) {
+   return (v !== null) && (Object.keys(v).length === 1);
+}
+function is$u2r2au2NQ4html9Attribute10attributesaQ9Operation8childrenr1Q4html4Node4noder1Q4html4Node4node(v) {
+   return Object.keys(v).length === 1;
 }
 function is$Q4html9Attributer2Q6string3keyQ6string5value(v) {
    if(((typeof v.key) === "undefined") || ((typeof v.key) !== "string"))  {
