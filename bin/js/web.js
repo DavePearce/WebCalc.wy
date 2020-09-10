@@ -13,7 +13,7 @@ function web$app$refresh$qQ5State$V(st) {
    } else  {
       let update = web$diff$create$Q4html4NodeQ4html4Node$Q9Operation(Wy.copy(current.model), Wy.copy(m));
       t = web$app$update_dom$Q3dom4NodeQ4diff9OperationqQ5State$Q3dom4Node(current.view, Wy.copy(update), st);
-      st.$ref.root.replaceChild(t, current.view);
+      web$app$replace_child$Q3dom4NodeQ3dom4NodeQ3dom4Node$V(st.$ref.root, current.view, t);
    }
     {
       const $0 = new Wy.Record({model: Wy.copy(m), view: t});
@@ -80,13 +80,13 @@ function web$app$update_dom$Q3dom4NodeQ4diff9OperationqQ5State$Q3dom4Node(tree, 
 }
 function web$app$update_children$Q3dom4NodeaQ4diff9OperationqQ5State$V(tree, operations, st) {
    let children = tree.childNodes;
-   let max = std$math$max$II$I(children.length, operations.length);
-   for(let i = 0;i < max;i = i + 1) {
+   let size = std$math$min$II$I(children.length, operations.length);
+   for(let i = 0;i < size;i = i + 1) {
       let ithChild = children[i];
       let ithOp = Wy.copy(operations[i]);
       if(ithOp !== null)  {
          let t = web$app$update_dom$Q3dom4NodeQ4diff9OperationqQ5State$Q3dom4Node(ithChild, Wy.copy(ithOp), st);
-         tree.replaceChild(t, ithChild);
+         web$app$replace_child$Q3dom4NodeQ3dom4NodeQ3dom4Node$V(tree, ithChild, t);
       }
    }
 }
@@ -106,13 +106,18 @@ function web$app$resize_children$Q3dom4NodeaQ4diff9OperationqQ5State$V(tree, ope
          }
       }
    } else  {
-      while(size > 0)  {
+      while(size > operations.length)  {
          tree.removeChild(tree.lastChild);
           {
             const $1 = size - 1;
             size = $1;
          }
       }
+   }
+}
+function web$app$replace_child$Q3dom4NodeQ3dom4NodeQ3dom4Node$V(tree, oldChild, newChild) {
+   if(oldChild !== newChild)  {
+      tree.replaceChild(newChild, oldChild);
    }
 }
 function web$app$process_mouse_event$Q3dom10MouseEventQ4html7handlerqQ5State$V(e, h, st) {
