@@ -6,5 +6,8 @@ version="0.1.0"
 [build]
 platforms=["whiley","js"]
 
+[build.js]
+target="public/js"
+
 [dependencies]
 web="0.2.0"
