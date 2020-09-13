@@ -115,19 +115,11 @@ function main$view$Q5State$Q4Node(s) {
    } else  {
       current = s.current;
    }
-   return web$html$div$aQ4Node$Q4Node([web$html$h1$Q4Node$Q4Node(Wy.fromString(std$ascii$to_string$I$Q6string(current))), web$html$div$aQ4Node$Q4Node([main$numeric$I$Q4Node(7), main$numeric$I$Q4Node(8), main$numeric$I$Q4Node(9), main$button$Q6stringQ11Transformer$Q4Node("/", main$DIVIDER$static)]), web$html$div$aQ4Node$Q4Node([main$numeric$I$Q4Node(4), main$numeric$I$Q4Node(5), main$numeric$I$Q4Node(6), main$button$Q6stringQ11Transformer$Q4Node("*", main$MULTIPLIER$static)]), web$html$div$aQ4Node$Q4Node([main$numeric$I$Q4Node(1), main$numeric$I$Q4Node(2), main$numeric$I$Q4Node(3), main$button$Q6stringQ11Transformer$Q4Node("+", main$ADDER$static)]), web$html$div$aQ4Node$Q4Node([main$button$Q6stringQ11Transformer$Q4Node("C", function(p0) {
-      return main$clear$Q5State$Q5StateaQ2io6Action(p0);
-   }), main$numeric$I$Q4Node(0), main$button$Q6stringQ11Transformer$Q4Node("=", function(p0) {
-      return main$execute$Q5State$Q5StateaQ2io6Action(p0);
-   }), main$button$Q6stringQ11Transformer$Q4Node("-", main$SUBTRACTER$static)])]);
+   return web$html$div$aQ4Node$Q4Node([web$html$h1$Q4Node$Q4Node(Wy.fromString(std$ascii$to_string$I$Q6string(current))), web$html$div$aQ4Node$Q4Node([main$numeric$I$Q4Node(7), main$numeric$I$Q4Node(8), main$numeric$I$Q4Node(9), main$button$Q6stringQ11Transformer$Q4Node("/", main$DIVIDER$static)]), web$html$div$aQ4Node$Q4Node([main$numeric$I$Q4Node(4), main$numeric$I$Q4Node(5), main$numeric$I$Q4Node(6), main$button$Q6stringQ11Transformer$Q4Node("*", main$MULTIPLIER$static)]), web$html$div$aQ4Node$Q4Node([main$numeric$I$Q4Node(1), main$numeric$I$Q4Node(2), main$numeric$I$Q4Node(3), main$button$Q6stringQ11Transformer$Q4Node("+", main$ADDER$static)]), web$html$div$aQ4Node$Q4Node([main$button$Q6stringQ11Transformer$Q4Node("C", main$clear$Q5State$Q5StateaQ2io6Action), main$numeric$I$Q4Node(0), main$button$Q6stringQ11Transformer$Q4Node("=", main$execute$Q5State$Q5StateaQ2io6Action), main$button$Q6stringQ11Transformer$Q4Node("-", main$SUBTRACTER$static)])]);
 }
 function main$main() {
    let state = new Wy.Record({current: null, accumulator: 0, mode: main$ADD$static});
-   return new Wy.Record({model: Wy.copy(state), view: function(p0) {
-      return main$view$Q5State$Q4Node(p0);
-   }, process: function(p0, p1) {
-      return main$dummy_processor$qQ2io5StateQ2io6Action$V(p0, p1);
-   }});
+   return new Wy.Record({model: Wy.copy(state), view: main$view$Q5State$Q4Node, process: main$dummy_processor$qQ2io5StateQ2io6Action$V});
 }
 function main$dummy_processor$qQ2io5StateQ2io6Action$V(st, as) {
     {
