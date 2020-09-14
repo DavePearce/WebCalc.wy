@@ -10,4 +10,4 @@ platforms=["whiley","js"]
 target="public/js"
 
 [dependencies]
-web="0.2.0"
+web="0.2.1"
