@@ -1,6 +1,6 @@
 'use strict';
-function web$app$run(app, root, doc) {
-   let state = new Wy.Ref(new Wy.Record({app: Wy.copy(app), root: root, rendering: null, document: doc}));
+function web$app$run(app, root, win) {
+   let state = new Wy.Ref(new Wy.Record({app: Wy.copy(app), root: root, rendering: null, window: win}));
    web$app$refresh$qQ5State$V(state);
 }
 function web$app$refresh$qQ5State$V(st) {
@@ -22,9 +22,9 @@ function web$app$refresh$qQ5State$V(st) {
 }
 function web$app$to_dom$Q4html4NodeqQ5State$Q3dom4Node(node, st) {
    if((typeof node) === "string")  {
-      return st.$ref.document.createTextNode(Wy.copy(node));
+      return st.$ref.window.document.createTextNode(Wy.copy(node));
    } else  {
-      let element = st.$ref.document.createElement(Wy.copy(node.name));
+      let element = st.$ref.window.document.createElement(Wy.copy(node.name));
       web$app$initEventListeners(element);
       for(let i = 0;i < node.children.length;i = i + 1) {
          let child = web$app$to_dom$Q4html4NodeqQ5State$Q3dom4Node(Wy.copy(node.children[i]), st);
@@ -97,7 +97,7 @@ function web$app$replace_child$Q3dom4NodeQ3dom4NodeQ3dom4Node$V(tree, oldChild, 
 }
 function web$app$update_attributes$Q3dom4NodeaQ4diff18AttributeOperationqQ5State$V(tree, operations, st) {
    if(tree.nodeType === w3c$dom$ELEMENT_NODE$static)  {
-      Wy.assert(is$Q3dom4Nodeqr25m2Q6stringu3mQ5EventVmQ10MouseEventVmQ13KeyboardEventVV16addEventListenerm2Q6stringu3mQ5EventVmQ10MouseEventVmQ13KeyboardEventVV19removeEventListenerI8nodeTypeQ6string8nodeNameu2NQ7Element6parentaQ4Node10childNodesQ4Node10firstChildQ4Node9lastChildQ4Node11nextSiblingQ4Node15previousSiblingB11isConnectedfVB13hasChildNodesQ6string9nodeValueu2NQ6string11textContentmQ4NodeV11appendChildmQ4NodeV11removeChildm2Q4NodeQ4NodeV12replaceChildQ19CssStyleDeclaration5styleaQ7Element8childrenQ6string9classNameQ4List9classListQ6string2idQ6string9innerTextmVV6removem2Q6stringQ6stringV12setAttribute(tree));
+      Wy.assert(is$Q3dom4Nodeqr25m2Q6stringQ13EventListenerV16addEventListenerm2Q6stringQ13EventListenerV19removeEventListenerI8nodeTypeQ6string8nodeNameu2NQ7Element6parentaQ4Node10childNodesQ4Node10firstChildQ4Node9lastChildQ4Node11nextSiblingQ4Node15previousSiblingB11isConnectedfVB13hasChildNodesQ6string9nodeValueu2NQ6string11textContentmQ4NodeV11appendChildmQ4NodeV11removeChildm2Q4NodeQ4NodeV12replaceChildQ19CssStyleDeclaration5styleaQ7Element8childrenQ6string9classNameQ4List9classListQ6string2idQ6string9innerTextmVV6removem2Q6stringQ6stringV12setAttribute(tree));
       for(let i = 0;i < operations.length;i = i + 1) {
          let ith = Wy.copy(operations[i]);
          if((ith === null) || (ith.before === null))  {
@@ -1293,7 +1293,7 @@ function web$io$process_timeout$qQ5StateQ7Timeout$V(st, action) {
          return web$io$process_event$qQ5StateQ7handler$V(st, action.handler);
       };
    }(st, action);
-   w3c$dom$setTimeout(m, action.timeout);
+   st.$ref.window.setTimeout(m, action.timeout);
 }
 function web$io$process_interval$qQ5StateQ8Interval$V(st, action) {
    let m = function(action, st) {
@@ -1301,13 +1301,13 @@ function web$io$process_interval$qQ5StateQ8Interval$V(st, action) {
          return web$io$process_event$qQ5StateQ7handler$V(st, action.handler);
       };
    }(action, st);
-   w3c$dom$setInterval(m, action.interval);
+   st.$ref.window.setInterval(m, action.interval);
 }
 function web$io$alert$Q6string$Q5Alert(message) {
    return new Wy.Record({message: Wy.copy(message)});
 }
 function web$io$process_alert$qQ5StateQ5Alert$V(st, action) {
-   w3c$dom$alert(Wy.copy(action.message));
+   st.$ref.window.alert(Wy.copy(action.message));
 }
 function web$io$processor$qQ5StateQ6Action$V(st, action) {
    if(is$Q6Actionr3Q6string3urlQ8consumer2okQ7handler5error(action))  {
@@ -1403,7 +1403,7 @@ function is$u2r2Q4uint7timeoutQ7handler7handlerr2Q4uint8intervalQ7handler7handle
    }
    return true;
 }
-function is$Q3dom4Nodeqr25m2Q6stringu3mQ5EventVmQ10MouseEventVmQ13KeyboardEventVV16addEventListenerm2Q6stringu3mQ5EventVmQ10MouseEventVmQ13KeyboardEventVV19removeEventListenerI8nodeTypeQ6string8nodeNameu2NQ7Element6parentaQ4Node10childNodesQ4Node10firstChildQ4Node9lastChildQ4Node11nextSiblingQ4Node15previousSiblingB11isConnectedfVB13hasChildNodesQ6string9nodeValueu2NQ6string11textContentmQ4NodeV11appendChildmQ4NodeV11removeChildm2Q4NodeQ4NodeV12replaceChildQ19CssStyleDeclaration5styleaQ7Element8childrenQ6string9classNameQ4List9classListQ6string2idQ6string9innerTextmVV6removem2Q6stringQ6stringV12setAttribute(v) {
+function is$Q3dom4Nodeqr25m2Q6stringQ13EventListenerV16addEventListenerm2Q6stringQ13EventListenerV19removeEventListenerI8nodeTypeQ6string8nodeNameu2NQ7Element6parentaQ4Node10childNodesQ4Node10firstChildQ4Node9lastChildQ4Node11nextSiblingQ4Node15previousSiblingB11isConnectedfVB13hasChildNodesQ6string9nodeValueu2NQ6string11textContentmQ4NodeV11appendChildmQ4NodeV11removeChildm2Q4NodeQ4NodeV12replaceChildQ19CssStyleDeclaration5styleaQ7Element8childrenQ6string9classNameQ4List9classListQ6string2idQ6string9innerTextmVV6removem2Q6stringQ6stringV12setAttribute(v) {
    return true;
 }
 function is$u3r2Q6string5eventQ7handler7handlerr2Q6string10mouseEventQ7handler7handlerr2Q6string8keyEventQ7handler7handlerr2Q6string10mouseEventQ7handler7handler(v) {
