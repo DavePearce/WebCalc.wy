@@ -6,8 +6,10 @@ import web::html
 import web::io
 import click, style from web::html
 import button, div, h1 from web::html
-import Node, Event, MouseEvent from web::html
-import App from web::app
+import Event, MouseEvent from web::html
+
+type Node is html::Node<State>
+type Action is io::Action<State>
 
 // =========================================
 // Model
@@ -22,10 +24,6 @@ public type State is {
     int mode,
     int|null current,
     int accumulator
-}
-
-public type Action is {
-    int dummy
 }
 
 function push(int mode, State s) -> (State r):
@@ -90,20 +88,20 @@ public final Transformer DIVIDER = &(State s -> (push(DIVIDE,s),[]))
 
 final string BUTTON_STYLE = "background-color: #4CAF50; color: white; border: none; padding: 15px 32px; display: inline-block; font-size: 16px;"
 
-function button(string label, Transformer fn) -> Node<State,io::Action<State> >:
+function button(string label, Transformer fn) -> Node:
     // construct button
     return html::button([
         style(BUTTON_STYLE),
         click(&(MouseEvent e, State s -> fn(s)))
     ],label)
 
-function numeric(int value) -> Node<State,io::Action<State> >:
+function numeric(int value) -> Node:
     // construct label
     string label = (string) ascii::to_string(value)
     // construct button
     return button(label,&(State s -> (enter(value,s),[])))
 
-function view(State s) -> Node<State,io::Action<State> >:
+function view(State s) -> Node:
     int current
     // Normalise current value
     if s.current is null:
@@ -134,12 +132,5 @@ public export function main()->io::App<State>:
         // Initial state
         model: state,
         // View Transformer
-        view: &view,
-        // Action Processor (DUMMY)
-        process: &dummy_processor
+        view: &view
     }
-
-method dummy_processor(&io::State<State> st, io::Action<State> as):
-    // FIXME: there is a bug in that we cannot use io::processor for
-    // reasons unknown.
-    skip
