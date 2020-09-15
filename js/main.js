@@ -125,11 +125,5 @@ function main$main() {
    let state = new Wy.Record({current: null, accumulator: 0, mode: main$ADD$static});
    return new Wy.Record({model: Wy.copy(state), view: function(p0) {
       return main$view$Q5State$Q4Node(p0);
-   }, process: function(p0, p1) {
-      return main$dummy_processor$qQ2io5StateQ2io6Action$V(p0, p1);
    }});
-}
-function main$dummy_processor$qQ2io5StateQ2io6Action$V(st, as) {
-    {
-   }
 }

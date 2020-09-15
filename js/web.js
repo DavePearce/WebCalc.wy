@@ -182,7 +182,7 @@ function web$app$process_event$v1EQ4html7handlerqQ5State$V(e, h, st) {
       st.$ref.app.model = $2;
    }
    for(let i = 0;i < actions.length;i = i + 1) {
-      st.$ref.app.process(st, Wy.copy(actions[i]));
+      web$io$processor$qQ5StateQ6Action$V(st, Wy.copy(actions[i]));
    }
    web$app$refresh$qQ5State$V(st);
 }
@@ -1255,124 +1255,180 @@ function web$html$to_mouse_event$Q3dom10MouseEvent$Q10MouseEvent(event) {
 function web$html$to_key_event$Q3dom13KeyboardEvent$Q13KeyboardEvent(event) {
    return new Wy.Record({altKey: event.altKey, code: event.code, ctrlKey: event.ctrlKey, isComposing: event.isComposing, key: event.key, keyCode: event.keyCode, location: event.location, metaKey: event.metaKey, repeat: event.repeat, shiftKey: event.shiftKey});
 }
-function web$io$process_request$qQ5StateQ3Get$V(st, action) {
-   let ok = function(st, action) {
-      return function(s) {
-         return web$io$consume_event$v1TqQ5StateQ8consumer$V(Wy.copy(s), st, action.ok);
-      };
-   }(st, action);
-   let err = function(st, action) {
-      return function(i) {
-         return web$io$process_event$qQ5StateQ7handler$V(st, action.error);
-      };
-   }(st, action);
-   web$io$get$Q6stringmQ6stringVmIV$V(Wy.copy(action.url), ok, err);
-}
-function web$io$process_request$qQ5StateQ4Post$V(st, action) {
-   let ok = function(st, action) {
-      return function(s) {
-         return web$io$consume_event$v1TqQ5StateQ8consumer$V(Wy.copy(s), st, action.ok);
-      };
-   }(st, action);
-   let err = function(st, action) {
-      return function(i) {
-         return web$io$process_event$qQ5StateQ7handler$V(st, action.error);
-      };
-   }(st, action);
-   web$io$post$Q6stringQ6stringmQ6stringVmIV$V(Wy.copy(action.url), Wy.copy(action.payload), ok, err);
-}
-function web$io$timeout$Q4uintQ7handler$Q7Timeout(timeout, handler) {
-   return new Wy.Record({timeout: timeout, handler: handler});
-}
-function web$io$interval$Q4uintQ7handler$Q8Interval(interval, handler) {
-   return new Wy.Record({interval: interval, handler: handler});
-}
-function web$io$process_timeout$qQ5StateQ7Timeout$V(st, action) {
-   let m = function(st, action) {
-      return function() {
-         return web$io$process_event$qQ5StateQ7handler$V(st, action.handler);
-      };
-   }(st, action);
-   st.$ref.window.setTimeout(m, action.timeout);
-}
-function web$io$process_interval$qQ5StateQ8Interval$V(st, action) {
-   let m = function(action, st) {
-      return function() {
-         return web$io$process_event$qQ5StateQ7handler$V(st, action.handler);
-      };
-   }(action, st);
-   st.$ref.window.setInterval(m, action.interval);
-}
-function web$io$alert$Q6string$Q5Alert(message) {
-   return new Wy.Record({message: Wy.copy(message)});
-}
-function web$io$process_alert$qQ5StateQ5Alert$V(st, action) {
-   st.$ref.window.alert(Wy.copy(action.message));
-}
 function web$io$processor$qQ5StateQ6Action$V(st, action) {
-   if(is$Q6Actionr3Q6string3urlQ8consumer2okQ7handler5error(action))  {
-      web$io$process_request$qQ5StateQ3Get$V(st, Wy.copy(action));
-   } else  {
-      if(is$u4r4Q6string3urlQ6string7payloadQ8consumer2okQ7handler5errorr1Q6string7messager2Q4uint7timeoutQ7handler7handlerr2Q4uint8intervalQ7handler7handlerr4Q6string3urlQ6string7payloadQ8consumer2okQ7handler5error(action))  {
-         web$io$process_request$qQ5StateQ4Post$V(st, Wy.copy(action));
-      } else  {
-         if(is$u3r1Q6string7messager2Q4uint7timeoutQ7handler7handlerr2Q4uint8intervalQ7handler7handlerr1Q6string7message(action))  {
-            web$io$process_alert$qQ5StateQ5Alert$V(st, Wy.copy(action));
-         } else  {
-            if(is$u2r2Q4uint7timeoutQ7handler7handlerr2Q4uint8intervalQ7handler7handlerr2Q4uint7timeoutQ7handler7handler(action))  {
-               web$io$process_timeout$qQ5StateQ7Timeout$V(st, Wy.copy(action));
-            } else  {
-               web$io$process_interval$qQ5StateQ8Interval$V(st, Wy.copy(action));
-            }
-         }
-      }
+   let actions = action.apply(st);
+   for(let i = 0;i < actions.length;i = i + 1) {
+      web$io$processor$qQ5StateQ6Action$V(st, Wy.copy(actions[i]));
    }
 }
-function web$io$process_event$qQ5StateQ7handler$V(st, fn) {
-   let [m, as] = fn(Wy.copy(st.$ref.app.model));
+function web$io$alert$Q6string$Q6Action(message) {
+   return new Wy.Record({apply: function(message) {
+      return function(st) {
+         return st.$ref.window.alert(Wy.copy(message));
+      };
+   }(message)});
+}
+function web$io$call$mQ3dom6WindowV$Q6Action(call) {
+   return new Wy.Record({apply: function(call) {
+      return function(st) {
+         return call(st.$ref.window);
+      };
+   }(call)});
+}
+function web$io$get$Q6stringQ8consumerQ7handler$Q6Action(url, ok, error) {
+   return new Wy.Record({apply: function(ok, url, error) {
+      return function(st) {
+         return web$io$apply_get$qQ5StateQ6stringQ8consumerQ7handler$aQ6Action(st, Wy.copy(url), ok, error);
+      };
+   }(ok, url, error)});
+}
+function web$io$interval$Q4uintQ7handler$Q6Action(timeout, handler) {
+   return new Wy.Record({apply: function(timeout, handler) {
+      return function(st) {
+         return web$io$apply_interval$qQ5StateQ4uintQ7handler$aQ6Action(st, timeout, handler);
+      };
+   }(timeout, handler)});
+}
+function web$io$post$Q6stringQ6stringQ8consumerQ7handler$Q6Action(url, payload, ok, error) {
+   return new Wy.Record({apply: function(ok, url, error, payload) {
+      return function(st) {
+         return web$io$apply_post$qQ5StateQ6stringQ6stringQ8consumerQ7handler$aQ6Action(st, Wy.copy(url), Wy.copy(payload), ok, error);
+      };
+   }(ok, url, error, payload)});
+}
+function web$io$timeout$Q4uintQ7handler$Q6Action(timeout, handler) {
+   return new Wy.Record({apply: function(timeout, handler) {
+      return function(st) {
+         return web$io$apply_timeout$qQ5StateQ4uintQ7handler$aQ6Action(st, timeout, handler);
+      };
+   }(timeout, handler)});
+}
+function web$io$query$Q6stringQ5queryQ8consumer$Q6Action(id, query, consumer) {
+   return new Wy.Record({apply: function(id, query, consumer) {
+      return function(st) {
+         return web$io$apply_query$qQ5StateQ6stringQ5queryQ8consumer$aQ6Action(st, Wy.copy(id), query, consumer);
+      };
+   }(id, query, consumer)});
+}
+function web$io$query$Q5queryQ8consumer$Q6Action(query, consumer) {
+   return new Wy.Record({apply: function(query, consumer) {
+      return function(st) {
+         return web$io$apply_query$qQ5StateQ5queryQ8consumer$aQ6Action(st, query, consumer);
+      };
+   }(query, consumer)});
+}
+function web$io$apply_get$qQ5StateQ6stringQ8consumerQ7handler$aQ6Action(st, url, ok, error) {
+   let mok = function(st, ok) {
+      return function(s) {
+         return web$io$consume_event$v1TqQ5StateQ8consumer$V(Wy.copy(s), st, ok);
+      };
+   }(st, ok);
+   let merr = function(st, error) {
+      return function(i) {
+         return web$io$process_event$qQ5StateQ7handler$V(st, error);
+      };
+   }(st, error);
+   web$io$begin_get$Q6stringmQ6stringVmIV$V(Wy.copy(url), mok, merr);
+   return [];
+}
+function web$io$apply_interval$qQ5StateQ4uintQ7handler$aQ6Action(st, interval, handler) {
+   let m = function(st, handler) {
+      return function() {
+         return web$io$process_event$qQ5StateQ7handler$V(st, handler);
+      };
+   }(st, handler);
+   st.$ref.window.setInterval(m, interval);
+   return [];
+}
+function web$io$apply_post$qQ5StateQ6stringQ6stringQ8consumerQ7handler$aQ6Action(st, url, payload, ok, error) {
+   let mok = function(st, ok) {
+      return function(s) {
+         return web$io$consume_event$v1TqQ5StateQ8consumer$V(Wy.copy(s), st, ok);
+      };
+   }(st, ok);
+   let merr = function(st, error) {
+      return function(i) {
+         return web$io$process_event$qQ5StateQ7handler$V(st, error);
+      };
+   }(st, error);
+   web$io$begin_post$Q6stringQ6stringmQ6stringVmIV$V(Wy.copy(url), Wy.copy(payload), mok, merr);
+   return [];
+}
+function web$io$apply_timeout$qQ5StateQ4uintQ7handler$aQ6Action(st, timeout, handler) {
+   let m = function(st, handler) {
+      return function() {
+         return web$io$process_event$qQ5StateQ7handler$V(st, handler);
+      };
+   }(st, handler);
+   st.$ref.window.setTimeout(m, timeout);
+   return [];
+}
+function web$io$apply_query$qQ5StateQ6stringQ5queryQ8consumer$aQ6Action(st, id, query, consumer) {
+   let e = st.$ref.window.document.getElementById(Wy.copy(id));
+   let response = query(e);
+   let [m, as] = consumer(Wy.copy(st.$ref.app.model), Wy.copy(response));
     {
       const $4 = Wy.copy(m);
       st.$ref.app.model = $4;
    }
-   for(let i = 0;i < as.length;i = i + 1) {
-      web$io$processor$qQ5StateQ6Action$V(st, Wy.copy(as[i]));
-   }
+   return Wy.copy(as);
 }
-function web$io$consume_event$v1TqQ5StateQ8consumer$V(response, st, fn) {
-   let [m, as] = fn(Wy.copy(st.$ref.app.model), Wy.copy(response));
+function web$io$apply_query$qQ5StateQ5queryQ8consumer$aQ6Action(st, query, consumer) {
+   let response = query(st.$ref.window);
+   let [m, as] = consumer(Wy.copy(st.$ref.app.model), Wy.copy(response));
     {
       const $5 = Wy.copy(m);
       st.$ref.app.model = $5;
    }
+   return Wy.copy(as);
+}
+function web$io$process_event$qQ5StateQ7handler$V(st, fn) {
+   let [m, as] = fn(Wy.copy(st.$ref.app.model));
+    {
+      const $6 = Wy.copy(m);
+      st.$ref.app.model = $6;
+   }
    for(let i = 0;i < as.length;i = i + 1) {
       web$io$processor$qQ5StateQ6Action$V(st, Wy.copy(as[i]));
    }
+   web$app$refresh$qQ5State$V(st);
+}
+function web$io$consume_event$v1TqQ5StateQ8consumer$V(response, st, fn) {
+   let [m, as] = fn(Wy.copy(st.$ref.app.model), Wy.copy(response));
+    {
+      const $7 = Wy.copy(m);
+      st.$ref.app.model = $7;
+   }
+   for(let i = 0;i < as.length;i = i + 1) {
+      web$io$processor$qQ5StateQ6Action$V(st, Wy.copy(as[i]));
+   }
+   web$app$refresh$qQ5State$V(st);
 }
 const web$io$HTTP_OK$static = 200;
-function web$io$get$Q6stringmQ6stringVmIV$V(url, success, error) {
+function web$io$begin_get$Q6stringmQ6stringVmIV$V(url, success, error) {
    let xhttp = w3c$ajax$newXMLHttpRequest();
    xhttp.open("GET", Wy.copy(url), true);
     {
-      const $6 = function(error, xhttp, success) {
+      const $8 = function(error, xhttp, success) {
          return function() {
             return web$io$response_handler$Q14XMLHttpRequestmQ6stringVmIV$V(xhttp, success, error);
          };
       }(error, xhttp, success);
-      xhttp.onreadystatechange = $6;
+      xhttp.onreadystatechange = $8;
    }
    xhttp.send("");
 }
-function web$io$post$Q6stringQ6stringmQ6stringVmIV$V(url, data, success, error) {
+function web$io$begin_post$Q6stringQ6stringmQ6stringVmIV$V(url, data, success, error) {
    let xhttp = w3c$ajax$newXMLHttpRequest();
    xhttp.open("POST", Wy.copy(url), true);
    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     {
-      const $7 = function(error, xhttp, success) {
+      const $9 = function(error, xhttp, success) {
          return function() {
             return web$io$response_handler$Q14XMLHttpRequestmQ6stringVmIV$V(xhttp, success, error);
          };
       }(error, xhttp, success);
-      xhttp.onreadystatechange = $7;
+      xhttp.onreadystatechange = $9;
    }
    xhttp.send(Wy.copy(data));
 }
@@ -1389,33 +1445,16 @@ function web$io$response_handler$Q14XMLHttpRequestmQ6stringVmIV$V(xhttp, success
 function is$u2r2aQ18AttributeOperation10attributesaQ13NodeOperation8childrenr1Q4html4Node4noder1Q4html4Node4node(v) {
    return Object.keys(v).length === 1;
 }
-function is$Q4diff13NodeOperationr1Q4html4Node4node(v) {
-   return (v !== null) && (Object.keys(v).length === 1);
-}
-function is$u4r4Q6string3urlQ6string7payloadQ8consumer2okQ7handler5errorr1Q6string7messager2Q4uint7timeoutQ7handler7handlerr2Q4uint8intervalQ7handler7handlerr4Q6string3urlQ6string7payloadQ8consumer2okQ7handler5error(v) {
-   return Object.keys(v).length === 4;
-}
-function is$u2r2Q4uint7timeoutQ7handler7handlerr2Q4uint8intervalQ7handler7handlerr2Q4uint7timeoutQ7handler7handler(v) {
-   if(((typeof v.timeout) === "undefined") || (!is$u1Q4uintQ4uint(v.timeout)))  {
-      return false;
-   } else if(((typeof v.handler) === "undefined") || (!is$u2Q7handlerQ7handlerfv1S2v1SaQ6Action(v.handler)))  {
-      return false;
-   }
-   return true;
-}
-function is$Q3dom4Nodeqr25m2Q6stringQ13EventListenerV16addEventListenerm2Q6stringQ13EventListenerV19removeEventListenerI8nodeTypeQ6string8nodeNameu2NQ7Element6parentaQ4Node10childNodesQ4Node10firstChildQ4Node9lastChildQ4Node11nextSiblingQ4Node15previousSiblingB11isConnectedfVB13hasChildNodesQ6string9nodeValueu2NQ6string11textContentmQ4NodeV11appendChildmQ4NodeV11removeChildm2Q4NodeQ4NodeV12replaceChildQ19CssStyleDeclaration5styleaQ7Element8childrenQ6string9classNameQ4List9classListQ6string2idQ6string9innerTextmVV6removem2Q6stringQ6stringV12setAttribute(v) {
-   return true;
-}
 function is$u3r2Q6string5eventQ7handler7handlerr2Q6string10mouseEventQ7handler7handlerr2Q6string8keyEventQ7handler7handlerr2Q6string10mouseEventQ7handler7handler(v) {
    if(((typeof v.mouseEvent) === "undefined") || ((typeof v.mouseEvent) !== "string"))  {
       return false;
-   } else if(((typeof v.handler) === "undefined") || (!is$u3Q7handlerQ7handlerQ7handlerf2Q10MouseEventv1S2v1Sav1A(v.handler)))  {
+   } else if(((typeof v.handler) === "undefined") || (!is$u3Q7handlerQ7handlerQ7handlerf2Q10MouseEventv1S2v1SaQ6Action(v.handler)))  {
       return false;
    }
    return true;
 }
-function is$Q6Actionr3Q6string3urlQ8consumer2okQ7handler5error(v) {
-   return Object.keys(v).length === 3;
+function is$Q4diff13NodeOperationr1Q4html4Node4node(v) {
+   return (v !== null) && (Object.keys(v).length === 1);
 }
 function is$Q4html9Attributer2Q6string3keyQ6string5value(v) {
    if(((typeof v.key) === "undefined") || ((typeof v.key) !== "string"))  {
@@ -1425,27 +1464,21 @@ function is$Q4html9Attributer2Q6string3keyQ6string5value(v) {
    }
    return true;
 }
-function is$u3r1Q6string7messager2Q4uint7timeoutQ7handler7handlerr2Q4uint8intervalQ7handler7handlerr1Q6string7message(v) {
-   return Object.keys(v).length === 1;
+function is$Q3dom4Nodeqr25m2Q6stringQ13EventListenerV16addEventListenerm2Q6stringQ13EventListenerV19removeEventListenerI8nodeTypeQ6string8nodeNameu2NQ7Element6parentaQ4Node10childNodesQ4Node10firstChildQ4Node9lastChildQ4Node11nextSiblingQ4Node15previousSiblingB11isConnectedfVB13hasChildNodesQ6string9nodeValueu2NQ6string11textContentmQ4NodeV11appendChildmQ4NodeV11removeChildm2Q4NodeQ4NodeV12replaceChildQ19CssStyleDeclaration5styleaQ7Element8childrenQ6string9classNameQ4List9classListQ6string2idQ6string9innerTextmVV6removem2Q6stringQ6stringV12setAttribute(v) {
+   return true;
 }
 function is$u2r2Q6string5eventQ7handler7handlerr2Q6string8keyEventQ7handler7handlerr2Q6string8keyEventQ7handler7handler(v) {
    if(((typeof v.keyEvent) === "undefined") || ((typeof v.keyEvent) !== "string"))  {
       return false;
-   } else if(((typeof v.handler) === "undefined") || (!is$u2Q7handlerQ7handlerf2Q13KeyboardEventv1S2v1Sav1A(v.handler)))  {
+   } else if(((typeof v.handler) === "undefined") || (!is$u2Q7handlerQ7handlerf2Q13KeyboardEventv1S2v1SaQ6Action(v.handler)))  {
       return false;
    }
    return true;
 }
-function is$u3Q7handlerQ7handlerQ7handlerf2Q10MouseEventv1S2v1Sav1A(v) {
+function is$u2Q7handlerQ7handlerf2Q13KeyboardEventv1S2v1SaQ6Action(v) {
    return true;
 }
-function is$u2Q7handlerQ7handlerf2Q13KeyboardEventv1S2v1Sav1A(v) {
-   return true;
-}
-function is$u1Q4uintQ4uint(v) {
-   return ((typeof v) === "number") && std$integer$uint$type(v);
-}
-function is$u2Q7handlerQ7handlerfv1S2v1SaQ6Action(v) {
+function is$u3Q7handlerQ7handlerQ7handlerf2Q10MouseEventv1S2v1SaQ6Action(v) {
    return true;
 }
 /**
