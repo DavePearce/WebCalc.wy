@@ -27,7 +27,7 @@ public type State is {
 }
 
 function push(int mode, State s) -> (State r):
-    io::Action<State>[] as
+    Action[] as
     // Dxecute previous operation (if any)
     (s,as) = execute(s)
     // Setup next operation
@@ -36,7 +36,7 @@ function push(int mode, State s) -> (State r):
     return s
 
 // Execute the current operation
-function execute(State s) -> (State r, io::Action<State>[] as):
+function execute(State s) -> (State r, Action[] as):
     //
     if s.current is int:
         switch(s.mode):
@@ -54,7 +54,7 @@ function execute(State s) -> (State r, io::Action<State>[] as):
     return s,[]
 
 // Clear the current operation and operands
-function clear(State s) -> (State r, io::Action<State>[] as):
+function clear(State s) -> (State r, Action[] as):
     //
     s.accumulator = 0
     s.current = null
@@ -76,11 +76,11 @@ function enter(int digit, State s) -> (State r):
 // Transformers
 // =========================================
 
-public type Transformer is function(State)->(State,io::Action<State>[])
-public final Transformer ADDER = &(State s -> (push(ADD,s),[]))
-public final Transformer SUBTRACTER = &(State s -> (push(SUBTRACT,s),[]))
-public final Transformer MULTIPLIER = &(State s -> (push(MULTIPLY,s),[]))
-public final Transformer DIVIDER = &(State s -> (push(DIVIDE,s),[]))
+type Transformer is function(State)->(State,Action[])
+final Transformer ADDER = &(State s -> (push(ADD,s),[]))
+final Transformer SUBTRACTER = &(State s -> (push(SUBTRACT,s),[]))
+final Transformer MULTIPLIER = &(State s -> (push(MULTIPLY,s),[]))
+final Transformer DIVIDER = &(State s -> (push(DIVIDE,s),[]))
 
 // =========================================
 // View
